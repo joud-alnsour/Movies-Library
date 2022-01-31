@@ -8,7 +8,7 @@ const app = express();
 
 app.use(cors());
 
-const movieData = require(' ');
+const movieData = require('./MovieData/data.json');
 
 
 app.get('/',movieInfoHandler);
