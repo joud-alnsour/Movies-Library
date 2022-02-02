@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+'use strict';
 
 require('dotenv').config();
 const express = require('express');
@@ -6,7 +7,7 @@ const cors = require('cors');
 const PORT = process.env.PORT;
 const app = express();
 const { default: axios } = require('axios'); 
-const pg = require('pg');  
+const pg = require('pg'); 
 app.use(express.json());
 app.use(cors());
 
@@ -24,6 +25,12 @@ app.get('/region',regionHandler);
 
 app.post('/addMovie',addMovieHandler);
 app.get('/getMovies',getMoviesHandler);
+
+
+app.put('/UPDATE/:id',updateidHandler);  
+app.delete('/DELETE/:id',deleteidHandler); 
+app.get('/getOneMoive/:id',getOneMovieHandler);
+
 
 app.get('*',notFoundHandler);  
 app.use(errorHandler); 
@@ -87,7 +94,7 @@ function errorHandler(err, req, res) {
 function regionHandler(req,res){
   axios.get(urlRegion)
     .then((result)=>{
-       
+      
       let movieRegion = result.data.results.map(movie =>{
         return new Region(movie.iso_3166_1,movie.english_name,movie.native_name);
       });
@@ -104,8 +111,7 @@ function regionHandler(req,res){
 function genreHandler(req,res){
   axios.get(urlGenre)
     .then((result)=>{
-       
-      let movieGenre = result.data.genres.map(movie =>{
+       let movieGenre = result.data.genres.map(movie =>{
         return new Genre(movie.id,movie.name);
       });
       res.status(200).json(movieGenre);
@@ -116,6 +122,46 @@ function genreHandler(req,res){
     });
 }
 
+function updateidHandler(req,res){ 
+  const id = req.params.id;
+  const movie = req.body;
+  const sql = 'UPDATE favMovies SET title = $1,releaseDate = $2,overview = $3,posterPath = $4 WHERE id =$5 RETURNING *;';
+  let values = [movie.title,movie.releaseDate,movie.overview,movie.posterPath,id];
+  client.query(sql,values).then(date=>{
+    res.status(200).json(date.rows);
+  }).catch((err) =>{  
+    errorHandler(err, req, res);
+
+  });
+ 
+}
+
+function deleteidHandler(req,res){
+  const id = req.params.id; 
+  const sql = `DELETE FROM favMovies WHERE id=${id}`;
+  client.query(sql).then(()=>{
+    res.status(200).send('The movie has been deleted');
+    res.status(204).json({}); 
+  }).catch((err) =>{  
+    errorHandler(err, req, res);
+
+  });
+
+}
+
+
+function getOneMovieHandler(req,res){
+  const id = req.params.id;
+  const sql = `SELECT * FROM favMovies WHERE id=${id}`;
+  client.query(sql).then((data)=>{
+    res.status(200).json(data.rows);
+
+  }).catch((err) =>{  
+    errorHandler(err, req, res);
+
+  });
+
+}
 
 
 
@@ -141,7 +187,7 @@ function searchHandler(req,res){
 function trendingHandler(req,res){
   axios.get(url)
     .then((result)=>{
-      
+       
       let movieTrend = result.data.results.map(movie =>{
         return new Trending(movie.id,movie.title,movie.release_date,movie.poster_path,movie.overview);
       });
@@ -157,7 +203,7 @@ function trendingHandler(req,res){
 function addMovieHandler(req,res){
   const movie = req.body; 
   let sql = 'INSERT INTO favMovies(title,releaseDate,overview,posterPath) VALUES ($1,$2,$3,$4) RETURNING *;';
-  let values =[movie.title,movie.releaseDate,movie.overview,movie.posterPath];
+  let values =[movie.title || '',movie.releaseDate || '',movie.overview || '',movie.posterPath || ''];
   client.query(sql,values).then(data => { 
     res.status(200).json(data.rows);
   }).catch(err => {
@@ -168,9 +214,9 @@ function addMovieHandler(req,res){
 
 function getMoviesHandler(req,res){
   let sql = 'SELECT * FROM favMovies;';
-  client.query(sql).then(data => {  
+  client.query(sql).then(data => { 
     res.status(200).json(data.rows);
-    
+     
   }).catch(err => {
     errorHandler(err, req, res);
   });
@@ -202,4 +248,4 @@ client.connect().then(()=>{
 
 
   });
-  });
+});
