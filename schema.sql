@@ -9,3 +9,4 @@ CREATE TABLE IF NOT EXISTS favmovies(
     overview VARCHAR(10000),
     release_date VARCHAR(255)
     );
+    //add 
