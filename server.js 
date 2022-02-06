@@ -13,7 +13,7 @@ app.use(cors());
 
 const client = new pg.Client(process.env.DATABASE_URL);
 
-const movieData = require('./MovieData/data.json');
+const movieData = require('./Movie Data/data.json');
 
 
 app.get('/',movieInfoHandler);

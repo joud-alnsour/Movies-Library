@@ -4,7 +4,9 @@
 **Author Name**: Joud AL-nsour
 
 ## WRRC
-Add an image of your WRRC here
+
+ ![image](imgs/WRRC.png)
+
 
 ## Overview
 This a movie website 
