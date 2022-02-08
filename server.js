@@ -16,7 +16,7 @@ const client = new pg.Client({
   ssl: { rejectUnauthorized: false }
 });
 
-const movieData = require('./Movie Data/data.json');
+const movieData = require('./MovieData/data.json');
 
 
 app.get('/',movieInfoHandler);
