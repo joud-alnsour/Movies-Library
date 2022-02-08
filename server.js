@@ -502,7 +502,7 @@ const client = new pg.Client({
   ssl: { rejectUnauthorized: false }
 });
 
-const movieData = require('./MovieData/data.json');
+const movieData = require('./Movie Data/data.json');
 
 
 app.get('/',movieInfoHandler);
@@ -521,8 +521,8 @@ app.delete('/DELETE/:id',deleteidHandler);
 app.get('/getOneMoive/:id',getOneMovieHandler);
 
 
-app.get('*',notFoundHandler); // error from the client
-app.use(errorHandler);// error from the server500
+app.get('*',notFoundHandler);  
+app.use(errorHandler); 
 
 
 const url =`https://api.themoviedb.org/3/trending/movie/day?api_key=${process.env.APIKEY}`;
