@@ -499,10 +499,10 @@ app.use(cors());
  
 const client = new pg.Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  //ssl: { rejectUnauthorized: false }
 });
 
-const movieData = require('./MovieData/data.json');
+const movieData = require('./Movie Data/data.json');
 
 
 app.get('/',movieInfoHandler);
@@ -694,7 +694,7 @@ function trendingHandler(req,res){
 
 
 function addMovieHandler(req,res){
-  const movie = req.body;// return * all
+  const movie = req.body;
   let sql = 'INSERT INTO favMovies(title,releaseDate,overview,posterPath) VALUES ($1,$2,$3,$4) RETURNING *;';
   let values =[movie.title || '',movie.releaseDate || '',movie.overview || '',movie.posterPath || ''];
   client.query(sql,values).then(data => {//here query can only return data if RETURNING * is there!
@@ -721,12 +721,12 @@ function getMoviesHandler(req,res){
 
 function movieInfoHandler(req,res){
   let moviearray = [];
-  movieData.data.forEach(movie => {
-    let oneMovie = new Movie (movie.title,movie.poster_path,
-      movie.overview);
+    
+    let oneMovie = new Movie (movieData.title,movieData.poster_path,
+        movieData.overview);
     moviearray.push(oneMovie);
 
-  });
+   
   return res.status(200).json(moviearray);
 }
 
