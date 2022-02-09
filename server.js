@@ -254,7 +254,7 @@ function movieInfoHandler(req,res){
     moviearray.push(oneMovie);
 
   });
-  return res.status(200).json(moviearray);//return me the array in a json format
+  return res.status(200).json(moviearray); 
 }
 
 function favHandler(req,res){
