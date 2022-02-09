@@ -10,14 +10,14 @@ const pg = require('pg'); // will provide us a client
 app.use(express.json());// use to parse the json language to readerable not json language so it solves the undefined inside the terminal
 app.use(cors());
 
-//const client = new pg.Client(process.env.DATABASE_URL) || new pg.Client({
- // connectionString: process.env.DATABASE_URL,
- // ssl: { rejectUnauthorized: false }
-//});
- const client = new pg.Client({
-   connectionString: process.env.DATABASE_URL,
+// const client = new pg.Client(process.env.DATABASE_URL) || new pg.Client({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: { rejectUnauthorized: false }
+// });
+const client = new pg.Client({
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
- });
+});
 
 const movieData = require('./MovieData/data.json');
 
@@ -254,7 +254,7 @@ function movieInfoHandler(req,res){
     moviearray.push(oneMovie);
 
   });
-  return res.status(200).json(moviearray); 
+  return res.status(200).json(moviearray);//return me the array in a json format
 }
 
 function favHandler(req,res){
