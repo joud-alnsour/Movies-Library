@@ -499,7 +499,7 @@ app.use(cors());
  
 const client = new pg.Client({
   connectionString: process.env.DATABASE_URL,
-  //ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false }
 });
 
 const movieData = require('./Movie Data/data.json');
